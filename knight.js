@@ -54,7 +54,7 @@ const isValid = (spot) => {
 // function finds the path between two spots
 const pathToTarget = (knight, target) =>{
     if(!isValid(knight) || !isValid(target)){
-        return 'Invalid input'
+        return []
     }
     let queue = [];
     queue.push(knight) // push  knight's first spot to queue
@@ -64,7 +64,7 @@ const pathToTarget = (knight, target) =>{
     let targetPath = []
    
     while(queue.length>0){
-        // check if target was found
+        // check if target was found (compare first spot in queue to target coordinations)
         if (queue[0][0]===target[0]&& queue[0][1]===target[1]){
             return targetPath = paths[queue[0]]
         }
@@ -85,9 +85,18 @@ const pathToTarget = (knight, target) =>{
    }
    return targetPath
 }
+// finds moves count from knight's first spot to target
+const countMoves = (knight, target) => {
+    let path = pathToTarget(knight, target);
+    let count = path.length
+    if (count ===0 ){
+        return 'Invalid input'
+    }
+    return count-1
+}
 
-let sh = pathToTarget([0,6], [6,7])
 
-console.log('target Path: ', sh)
+ 
+
 
 
