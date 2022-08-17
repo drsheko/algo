@@ -1,16 +1,12 @@
 const gameboard = () => {
-    var square = (x, y) => {
-        return [x, y]
-    }
     var board = () => {
         let arr =[]
         for(x=0 ; x<8 ; x++){
             let row =[]
             for(y=0 ; y<8; y++){
                 row.push([x,y])
-
             }
-            arr.push(row)
+               arr.push(row)
         }
         return arr
     }
@@ -19,21 +15,19 @@ const gameboard = () => {
 var board1 = () => {
     let arr =[]
     for(x=0 ; x<8 ; x++){
-        
         for(y=0 ; y<8; y++){
             arr.push([x,y])
-
         }
-        
     }
     return arr
 }
-var knight = (x, y) => {
+// knight represent a board square with coordination x,y
+var Knight = (x,y) => {
     var x = x ;
     var y = y ; 
     return {x, y}
 }
-
+//find possible moves for a given spot 
 var possibleMoves = (knight) => {
     let board = board1()
     let arr =[]
@@ -44,35 +38,56 @@ var possibleMoves = (knight) => {
             arr.push(board[i])
         }
     }
-   
     return arr
 }
-
-const short = (knight, target) =>{
-    //let squares = possibleMoves(knight)
+// check if spot is on the board
+const isValid = (spot) => {
+    let x = spot[0];
+    let y = spot[1]
+    if (x>7 || y>7){
+        return false;
+    }else if(x<0 || y<0){
+        return false;
+    }
+    return true
+}
+// function finds the path between two spots
+const pathToTarget = (knight, target) =>{
+    if(!isValid(knight) || !isValid(target)){
+        return 'Invalid input'
+    }
     let queue = [];
-    queue.push(knight)
+    queue.push(knight) // push  knight's first spot to queue
 
     let paths ={};
-    paths[knight] = knight
+    paths[knight] = [knight] 
     let targetPath = []
-  
+   
     while(queue.length>0){
-        if (queue[0]===target){
+        // check if target was found
+        if (queue[0][0]===target[0]&& queue[0][1]===target[1]){
             return targetPath = paths[queue[0]]
         }
-        let moves = possibleMoves(queue[0])
-        queue.push(moves)
-        for(i=0 ; i<moves.length; i++){
-            paths[moves[i]]=[...queue[0],moves[i] ]
+         
+        let moves = possibleMoves(Knight(queue[0][0],queue[0][1]))
+        // add possiple moves of first spot in queue
+        for(j=0 ; j<moves.length; j++){
+            queue.push(moves[j])
         }
+        
+        //add path for every possible move
+        for(i=0 ; i<moves.length; i++){
+            paths[moves[i]]=[...paths[queue[0]],moves[i] ]
+            
+        }
+        // remove first spot in queue after add its possible moves to queue
         queue.shift()
-    
    }
-
    return targetPath
 }
-let sh1 = board1()
-let sh = possibleMoves(knight(4,4))
-console.log(sh)
-console.log(sh1)
+
+let sh = pathToTarget([0,6], [6,7])
+
+console.log('target Path: ', sh)
+
+
